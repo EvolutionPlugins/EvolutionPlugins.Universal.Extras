@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using OpenMod.API;
 using OpenMod.API.Users;
 using OpenMod.Core.Ioc;
@@ -14,9 +15,9 @@ namespace EvolutionPlugins.Universal.Extras.Messaging
     {
         private readonly List<IMessageProvider> m_MessageProviders = new();
 
-        public MessageManager(MessageManagerOptions options, ILifetimeScope lifetimeScope, IHostInformation hostInformation, ILogger<MessageManager> logger)
+        public MessageManager(IOptions<MessageManagerOptions> options, ILifetimeScope lifetimeScope, IHostInformation hostInformation, ILogger<MessageManager> logger)
         {
-            foreach (var messageProvider in options.BroadcastProviderTypes)
+            foreach (var messageProvider in options.Value.BroadcastProviderTypes)
             {
                 m_MessageProviders.Add((IMessageProvider)ActivatorUtilitiesEx.CreateInstance(lifetimeScope, messageProvider));
             }

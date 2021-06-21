@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using OpenMod.API;
 using OpenMod.Core.Helpers;
 using OpenMod.Core.Ioc;
@@ -15,10 +16,10 @@ namespace EvolutionPlugins.Universal.Extras.Broadcast
     {
         private readonly List<IBroadcastProvider> m_BroadcastProviders = new();
 
-        public BroadcastManager(BroadcastManagerOptions options, ILifetimeScope lifetimeScope, IHostInformation hostInformation,
+        public BroadcastManager(IOptions<BroadcastManagerOptions> options, ILifetimeScope lifetimeScope, IHostInformation hostInformation,
             ILogger<BroadcastManager> logger)
         {
-            foreach (var provider in options.BroadcastProviderTypes)
+            foreach (var provider in options.Value.BroadcastProviderTypes)
             {
                 m_BroadcastProviders.Add((IBroadcastProvider)ActivatorUtilitiesEx.CreateInstance(lifetimeScope, provider));
             }
